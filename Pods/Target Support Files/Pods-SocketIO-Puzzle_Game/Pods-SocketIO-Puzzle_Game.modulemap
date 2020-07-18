@@ -1,0 +1,6 @@
+framework module Pods_SocketIO_Puzzle_Game {
+  umbrella header "Pods-SocketIO-Puzzle_Game-umbrella.h"
+
+  export *
+  module * { export * }
+}
