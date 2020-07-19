@@ -10,24 +10,9 @@ import SwiftUI
 
 struct GameRoom: View {
     
-    var roomName : String
+    @Binding var roomName : String
     @State var puzzleWord = ""
-    init(roomName : String) {
 
-        self.roomName = roomName
-
-        NotificationCenter.default.addObserver(forName: .init("newWord"), object: nil, queue: nil, using: setPuzzleWord(_:))
-        UserTasks.shared.ConnectGameRoom(with: roomName, completion: {
-            UserTasks.shared.Listen(to: "setWord") { (data) in
-                guard let data = data as? String else {return}
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "newWord"), object: data)
-                
-                
-            }
-        })
-        
-        
-    }
     func setPuzzleWord(_ notification : Notification){
         
         if let data = notification.object as? String{
@@ -36,12 +21,32 @@ struct GameRoom: View {
     }
     
     var body: some View {
-        Text(puzzleWord)
+        VStack{
+            Text("Room : "  + roomName).font(.headline)
+            Text("Word : "  + puzzleWord).font(.subheadline)
+            
+        }
+      .onAppear{
+            
+            self.addObserverAndListen()
+        }
+    }
+    func addObserverAndListen(){
+        NotificationCenter.default.addObserver(forName: .init("newWord"), object: nil, queue: nil, using: self.setPuzzleWord(_:))
+        UserTasks.shared.ConnectGameRoom(with: self.roomName, completion: {
+            
+            UserTasks.shared.Listen(to: "setWord") { (data) in
+                
+                guard let data = data as? String else {return}
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "newWord"), object: data)
+            }
+            UserTasks.shared.SendMessage(with: "getWord")
+        })
     }
 }
 
 struct GameRoom_Previews: PreviewProvider {
     static var previews: some View {
-        GameRoom(roomName: "Holoo")
+        GameRoom(roomName: .constant("halo"))
     }
 }

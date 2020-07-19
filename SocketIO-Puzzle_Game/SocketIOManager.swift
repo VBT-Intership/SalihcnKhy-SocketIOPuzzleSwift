@@ -13,7 +13,7 @@ import SocketIO
 class SocketIOManager {
     
     
-    let manager = SocketManager(socketURL: URL(string: "http://192.168.1.104:3000")!, config: [.log(true), .compress])
+    let manager = SocketManager(socketURL: URL(string: "http://192.168.1.105:3000")!, config: [.log(true), .compress])
     var socket: SocketIOClient!
 
     static let shared = SocketIOManager()

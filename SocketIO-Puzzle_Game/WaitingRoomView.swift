@@ -14,25 +14,12 @@ struct WaitingRoomView: View {
     @State var gameRoomName = ""
     
     
-    
-    init() {
-        NotificationCenter.default.addObserver(forName: .init("roomName"), object: nil, queue: nil, using: setRoomName(_:))
-        UserTasks.shared.ConnectWaitingRoom(completion: {
-            
-            UserTasks.shared.Listen(to: "isGameStarting") {  (data) in
-                
-                guard let data = data as? String else { return}
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "roomName"), object: data)
-            }
-            
-        })
-    }
     func setRoomName(_ notification : Notification){
         
         if let data = notification.object as? String{
-            print(data)
-            isGameStarting = true
+            print("\n\n ROME NAME IS " + data + "\n\n")
             gameRoomName = data
+            isGameStarting = true
         }
     }
     var body: some View {
@@ -40,21 +27,31 @@ struct WaitingRoomView: View {
             Color.yellow
                 .opacity(0.1)
                 .edgesIgnoringSafeArea(.all)
-            
-            if isGameStarting{
-                GameRoom(roomName: gameRoomName)
-                
-            }else {
-                VStack {
+
+            VStack {
                     Spacer()
                     ProgressBar()
                         .frame(width: 150.0, height: 150.0)
                         .padding(40.0)
                     Spacer()
-                }
-                
-                
             }
+            if isGameStarting {
+                NavigationLink(destination: GameRoom(roomName: $gameRoomName), isActive: self.$isGameStarting) {
+                  Text("")
+                }.hidden()
+            }
+        }.onAppear{
+            NotificationCenter.default.addObserver(forName: .init("roomName"), object: nil, queue: nil, using: self.setRoomName(_:))
+            
+                  UserTasks.shared.ConnectWaitingRoom(completion: {
+                      
+                      UserTasks.shared.Listen(to: "isGameStarting") {  (data) in
+                          
+                          guard let data = data as? String else { return}
+                          NotificationCenter.default.post(name: NSNotification.Name(rawValue: "roomName"), object: data)
+                      }
+                      
+                  })
         }
         
     }

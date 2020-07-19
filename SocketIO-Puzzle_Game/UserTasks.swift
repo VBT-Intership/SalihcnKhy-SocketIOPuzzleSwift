@@ -33,7 +33,7 @@ class UserTasks {
             self.siom.socket.removeAllHandlers()
         }
     }
-    func SendMessage(with event: String, data : Any){
+    func SendMessage(with event: String, data : Any = []){
         siom.emit(message: (to: event, data: data))
     }
     func ConnectGameRoom(with name: String,completion : @escaping ()->Void){

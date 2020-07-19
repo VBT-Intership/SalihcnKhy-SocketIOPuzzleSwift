@@ -42,7 +42,7 @@ struct RegisterView: View {
             if self.hasError{
                 Image(systemName:"exclamationmark.triangle.fill").foregroundColor(Color.red).padding(.trailing,10)
             }
-        }.frame(minWidth: self.frame.width * 0.8, minHeight: self.frame.height * 0.15 , maxHeight: self.frame.height * 0.2).overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 1))
+        }.frame(minWidth: self.frame.width * 0.8, minHeight: self.frame.height * 0.22 , maxHeight: self.frame.height * 0.25).overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 1))
     }
     
     fileprivate func buildAddButton() -> some View {
